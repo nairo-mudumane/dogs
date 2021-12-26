@@ -1,30 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { baseUrl } from '../../Api/utils/api';
+import useForm from '../../Hooks/useForm';
 import Button from '../Forms/Button';
 import Input from '../Forms/Input';
 
 export default function LoginForm() {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const username = useForm();
+  const password = useForm();
 
   function handleSubmit(event) {
     event.preventDefault();
-    fetch(`${baseUrl}/json/jwt-auth/v1/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        return data;
-      });
+    if (username.validate && password.validate) {
+      console.log('valido');
+    } else {
+      return false;
+    }
   }
 
   return (
@@ -32,9 +22,9 @@ export default function LoginForm() {
       <h1>Login</h1>
 
       <form action="" onSubmit={handleSubmit}>
-        <Input label="Usuario" type="text" name="username" />
+        <Input label="Usuario" type="text" name="username" {...username} />
 
-        <Input label="Senha" type="password" name="password" />
+        <Input label="Senha" type="password" name="password" {...password} />
 
         <Button>Entrar</Button>
       </form>
